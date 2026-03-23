@@ -8,15 +8,20 @@ pipeline {
             }
         }
 
-        stage('Build') {
+        stage('Build Docker Image') {
             steps {
-                echo 'Building project...'
+                script {
+                    sh 'docker build -t hotstar-app .'
+                }
             }
         }
 
-        stage('Test') {
+        stage('Run Container') {
             steps {
-                echo 'Testing project...'
+                script {
+                    sh 'docker rm -f hotstar-container || true'
+                    sh 'docker run -d -p 80:80 --name hotstar-container hotstar-app'
+                }
             }
         }
     }
