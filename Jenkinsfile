@@ -39,7 +39,7 @@ pipeline {
         stage('Run Container') {
             steps {
                 sh 'docker rm -f hotstar-container || true'
-                sh 'docker run -d -p 80:80 --name hotstar-container hotstar-app'
+                sh 'docker run -d -p 80:3000 --name hotstar-container hotstar-app'
             }
         }
     }
