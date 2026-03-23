@@ -34,6 +34,12 @@ pipeline {
             }
         }
 
+        stage('Trivy Scan') {
+            steps {
+                sh 'trivy image hotstar-app'
+            }
+        }
+
         stage('Run Container') {
             steps {
                 sh 'docker rm -f hotstar-container || true'
