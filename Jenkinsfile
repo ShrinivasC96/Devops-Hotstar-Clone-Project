@@ -40,6 +40,25 @@ pipeline {
             }
         }
 
+        stage('OWASP Scan') {
+            steps {
+                dependencyCheck additionalArguments: '--scan .', odcInstallation: 'default'
+                dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
+            }
+        }
+
+        stage('Push to DockerHub') {
+            steps {
+                withCredentials([usernamePassword(credentialsId: 'docker-creds', usernameVariable: 'DOCKER_USER', passwordVariable: 'DOCKER_PASS')]) {
+                    sh '''
+                    echo $DOCKER_PASS | docker login -u $DOCKER_USER --password-stdin
+                    docker tag hotstar-app $DOCKER_USER/hotstar-app:latest
+                    docker push $DOCKER_USER/hotstar-app:latest
+                    '''
+                }
+            }
+        }
+
         stage('Run Container') {
             steps {
                 sh 'docker rm -f hotstar-container || true'
