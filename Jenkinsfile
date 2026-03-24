@@ -17,6 +17,7 @@ pipeline {
                 withSonarQubeEnv('sonar') {
                     sh '''
                     docker run --rm \
+                    --network devsecops-net \
                     -v $(pwd):/usr/src \
                     sonarsource/sonar-scanner-cli \
                     -Dsonar.projectKey=hotstar \
