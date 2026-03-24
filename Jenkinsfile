@@ -43,10 +43,14 @@ pipeline {
 
         stage('OWASP Scan') {
             steps {
-                catchError(buildResult: 'SUCCESS', stageResult: 'FAILURE') {
-                    dependencyCheck additionalArguments: '--scan .', odcInstallation: 'Dependency-Check'
-                    dependencyCheckPublisher pattern: '**/dependency-check-report.xml'
-                }
+                sh '''
+                docker run --rm \
+                -v $(pwd):/src \
+                owasp/dependency-check \
+                --scan /src \
+                --format XML \
+                --out /src
+                '''
             }
         }
 
@@ -66,6 +70,14 @@ pipeline {
             steps {
                 sh 'docker rm -f hotstar-container || true'
                 sh 'docker run -d -p 80:3000 --name hotstar-container hotstar-app'
+            }
+        }
+        stage('Deploy to Kubernetes') {
+            steps {
+                sh '''
+                kubectl apply -f deployment.yaml
+                kubectl apply -f service.yaml
+                '''
             }
         }
     }
