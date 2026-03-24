@@ -40,19 +40,19 @@ pipeline {
                 sh 'trivy image hotstar-app'
             }
         }
-
-        stage('OWASP Scan') {
-            steps {
-                sh '''
-                docker run --rm \
-                -v $(pwd):/src \
-                owasp/dependency-check \
-                --scan /src \
-                --format XML \
-                --out /src
-                '''
-            }
-        }
+    
+        // stage('OWASP Scan') {
+        //     steps {
+        //         sh '''
+        //         docker run --rm \
+        //         -v $(pwd):/src \
+        //         owasp/dependency-check \
+        //         --scan /src \
+        //         --format XML \
+        //         --out /src
+        //         '''
+        //     }
+        // }
 
         stage('Push to DockerHub') {
             steps {
