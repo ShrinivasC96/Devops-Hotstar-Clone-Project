@@ -21,7 +21,7 @@ pipeline {
                     sonarsource/sonar-scanner-cli \
                     -Dsonar.projectKey=hotstar \
                     -Dsonar.sources=. \
-                    -Dsonar.host.url=http://13.235.8.236:9000 \
+                    -Dsonar.host.url=http://sonar:9000 \
                     -Dsonar.login=$SONAR_TOKEN
                     '''
                 }
