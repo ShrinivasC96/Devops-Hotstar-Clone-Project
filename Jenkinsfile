@@ -3,7 +3,7 @@ pipeline {
 
     environment {
         IMAGE_NAME = "hotstar-app"
-        IMAGE_TAG = "${BUILD_NUMBER}"
+        IMAGE_TAG = "1.0"
         DOCKER_HUB = credentials('docker-creds')
         SONAR_TOKEN = credentials('sonar-token')
     }
