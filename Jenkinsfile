@@ -18,7 +18,7 @@ pipeline {
 
         stage('Clone Code') {
             steps {
-                git branch: 'main',
+                git branch: 'master',
                     url: 'https://github.com/ShrinivasC96/Devops-Hotstar-Clone-Project.git'
             }
         }
