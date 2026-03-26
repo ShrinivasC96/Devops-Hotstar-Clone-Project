@@ -136,10 +136,10 @@ pipeline {
                 script {
                     if (!env.APP_URL) {
                         error "App URL not found!"
-                    }
-
+                    }        
                     sh '''
                     docker run --rm \
+                    -u 0 \
                     -v $(pwd):/zap/wrk/:rw \
                     ghcr.io/zaproxy/zaproxy:stable \
                     zap-baseline.py \
