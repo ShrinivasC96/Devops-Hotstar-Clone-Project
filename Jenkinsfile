@@ -147,6 +147,7 @@ pipeline {
                     -t http://$APP_URL \
                     -m 5 \
                     --exit-code 0 \
+                    -I \
                     -r zap_report.html
                     '''
                 }
@@ -156,11 +157,11 @@ pipeline {
         stage('Publish ZAP Report') {
             steps {
                 publishHTML(target: [
-                    reportDir: 'zap-output',
+                    reportDir: '.',   // current directory where report is generated
                     reportFiles: 'zap_report.html',
                     reportName: 'OWASP ZAP Report'
                 ])
-                archiveArtifacts artifacts: "zap-output/zap_report.html"
+                archiveArtifacts artifacts: "zap_report.html"
             }
         }
     }
