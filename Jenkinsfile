@@ -139,16 +139,8 @@ pipeline {
                     }
         
                     sh '''
-                    docker run --rm \
-                    -u 0 \
-                    -v $(pwd):/zap/wrk/:rw \
-                    ghcr.io/zaproxy/zaproxy:stable \
-                    zap-baseline.py \
-                    -t http://$APP_URL \
-                    -m 5 \
-                    --exit-code 0 \
-                    -I \
-                    -r zap_report.html
+                    docker run --rm -u 0 -v $(pwd):/zap/wrk/:rw ghcr.io/zaproxy/zaproxy:stable \
+                        zap-baseline.py -t http://$APP_URL -m 5 -I -r zap_report.html
                     '''
                 }
             }
