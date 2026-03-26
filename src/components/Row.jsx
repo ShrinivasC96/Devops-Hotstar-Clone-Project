@@ -11,9 +11,9 @@ const fetchData=async()=>{
    setAllMovies(data.results)
 }
 console.log(allMovies);
-useEffect(()=>{
-    fetchData()
-},[])
+useEffect(() => {
+    fetchData();
+}, [fetchData])
 
   return (
     <div className='row'>
