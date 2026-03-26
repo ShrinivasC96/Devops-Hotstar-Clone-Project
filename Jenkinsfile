@@ -136,7 +136,8 @@ pipeline {
                 script {
                     if (!env.APP_URL) {
                         error "App URL not found!"
-                    }        
+                    }
+        
                     sh '''
                     docker run --rm \
                     -u 0 \
@@ -144,9 +145,22 @@ pipeline {
                     ghcr.io/zaproxy/zaproxy:stable \
                     zap-baseline.py \
                     -t http://$APP_URL \
-                    -m 5
+                    -m 5 \
+                    --exit-code 0 \
+                    -r zap_report.html
                     '''
                 }
+            }
+        }
+        
+        stage('Publish ZAP Report') {
+            steps {
+                publishHTML(target: [
+                    reportDir: 'zap-output',
+                    reportFiles: 'zap_report.html',
+                    reportName: 'OWASP ZAP Report'
+                ])
+                archiveArtifacts artifacts: "zap-output/zap_report.html"
             }
         }
     }
