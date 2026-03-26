@@ -140,6 +140,7 @@ pipeline {
 
                     sh '''
                     docker run --rm \
+                    -v $(pwd):/zap/wrk/:rw \
                     ghcr.io/zaproxy/zaproxy:stable \
                     zap-baseline.py \
                     -t http://$APP_URL \
