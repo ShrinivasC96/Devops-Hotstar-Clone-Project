@@ -4,7 +4,9 @@ pipeline {
     environment {
         IMAGE_NAME = "hotstar-app"
         IMAGE_TAG = "1.0"
-        DOCKER_HUB = credentials('docker-creds')
+        DOCKER_CREDS = credentials('docker-creds')
+        DOCKER_USER = "${DOCKER_CREDS_USR}"
+        DOCKER_PASS = "${DOCKER_CREDS_PSW}"
         SONAR_TOKEN = credentials('sonar-token')
     }
 
@@ -92,10 +94,11 @@ pipeline {
             steps {
                 sh '''
                 export KUBECONFIG=/var/lib/jenkins/.kube/config
-
-                # Update image dynamically
+        
                 sed -i "s|image: .*|image: $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
-
+        
+                cat deployment.yaml   # DEBUG (important)
+        
                 kubectl apply -f deployment.yaml
                 kubectl apply -f service.yaml
                 '''
