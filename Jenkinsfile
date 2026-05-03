@@ -109,8 +109,8 @@ pipeline {
                         echo "=== deployment.yaml ==="
                         cat deployment.yaml
 
-                        kubectl apply -f deployment.yaml -n $NAMESPACE
-                        kubectl apply -f service.yaml -n $NAMESPACE
+                        kubectl apply -f deployment.yaml
+                        kubectl apply -f service.yaml
                     '''
                 }
             }
