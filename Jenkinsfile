@@ -92,16 +92,29 @@ pipeline {
 
         stage('Deploy to Kubernetes (EKS)') {
             steps {
-                sh '''
-                export KUBECONFIG=/var/lib/jenkins/.kube/config
+                withCredentials([[
+                    $class: 'AmazonWebServicesCredentialsBinding',
+                    credentialsId: 'AWS_Access_Key'
+                ]]) {
+                    sh '''
+                    export AWS_DEFAULT_REGION=ap-south-1
         
-                sed -i "s|image: .*|image: $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
+                    # Debug (very important)
+                    aws sts get-caller-identity
         
-                cat deployment.yaml   # DEBUG (important)
+                    # Generate kubeconfig dynamically
+                    aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
         
-                kubectl apply -f deployment.yaml
-                kubectl apply -f service.yaml
-                '''
+                    export KUBECONFIG=/var/lib/jenkins/.kube/config
+        
+                    sed -i "s|image: .*|image: $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
+        
+                    cat deployment.yaml
+        
+                    kubectl apply -f deployment.yaml
+                    kubectl apply -f service.yaml
+                    '''
+                }
             }
         }
 
