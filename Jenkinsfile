@@ -98,17 +98,24 @@ pipeline {
                     passwordVariable: 'AWS_SECRET_ACCESS_KEY'
                 )]) {
                     sh '''
-                        aws configure set aws_access_key_id $AWS_ACCESS_KEY_ID
-                        aws configure set aws_secret_access_key $AWS_SECRET_ACCESS_KEY
-                        aws configure set region ap-south-1
-
+                        export AWS_DEFAULT_REGION=ap-south-1
+        
+                        echo "=== Verifying AWS Identity ==="
+                        aws sts get-caller-identity
+        
+                        echo "=== Generating kubeconfig ==="
+                        aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
+        
+                        echo "=== Applying Namespace ==="
                         kubectl apply -f namespace.yaml
-
-                        sed -i "s|image: .*|image: $DOCKER_REGISTRY/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
-
+        
+                        echo "=== Updating Image in Deployment ==="
+                        sed -i "s|image: .*|image: $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
+        
                         echo "=== deployment.yaml ==="
                         cat deployment.yaml
-
+        
+                        echo "=== Deploying to EKS ==="
                         kubectl apply -f deployment.yaml
                         kubectl apply -f service.yaml
                     '''
