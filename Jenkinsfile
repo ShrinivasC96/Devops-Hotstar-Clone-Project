@@ -106,9 +106,6 @@ pipeline {
                         echo "=== Generating kubeconfig ==="
                         aws eks update-kubeconfig --region ap-south-1 --name my-eks-cluster
         
-                        echo "=== Applying Namespace ==="
-                        kubectl apply -f namespace.yaml
-        
                         echo "=== Updating Image in Deployment ==="
                         sed -i "s|image: .*|image: $DOCKER_USER/$IMAGE_NAME:$IMAGE_TAG|g" deployment.yaml
         
